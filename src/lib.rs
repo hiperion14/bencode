@@ -65,6 +65,36 @@ impl IndexMut<usize> for Bee {
     }
 }
 
+impl Bee {
+    pub fn get_string(&self) -> Option<String> {
+        if let Bee { bee_value: BeeValue::String(s), raw: _ } = self {
+            Some(s.to_string())
+        } else {
+            None
+        }
+    }
+
+    pub fn get_int(&self) -> Option<i32> {
+        if let Bee { bee_value: BeeValue::Integer(i), raw: _ } = self {
+            Some(i.to_owned())
+        } else {
+            None
+        }
+    }
+    
+    pub fn get_raw(&self) -> Option<Vec<u8>> {
+        if let Bee { bee_value: BeeValue::Raw(v), raw: _ } = self {
+            Some(v.to_vec())
+        } else {
+            None
+        }
+    }
+    
+    pub fn get_decoded(&self) -> Vec<u8> {
+        self.raw.to_vec()
+    }
+}
+
 impl BeeValue {
     pub fn from_bytes(bytes: &Vec<u8>) -> Bee {
         let (value, _size) = Self::dfs(bytes, 0);
@@ -125,36 +155,12 @@ impl BeeValue {
                 if i % 2 == 1 {
                     dict[key.as_str()] = value;
                 } else {
-                    key = value.bee_value.get_string().unwrap();
+                    key = value.get_string().unwrap();
                 }
                 i+=1;
             }
             return (Bee {bee_value: dict.bee_value, raw: bytes[index..local_index + 1].to_vec()}, local_index + 1);
         }
         return (Bee {bee_value: BeeValue::Null, raw: vec![]}, index);
-    }
-
-    pub fn get_string(&self) -> Option<String> {
-        if let BeeValue::String(s) = self {
-            Some(s.to_string())
-        } else {
-            None
-        }
-    }
-
-    pub fn get_int(&self) -> Option<i32> {
-        if let BeeValue::Integer(i) = self {
-            Some(i.to_owned())
-        } else {
-            None
-        }
-    }
-    
-    pub fn get_raw(&self) -> Option<Vec<u8>> {
-        if let BeeValue::Raw(v) = self {
-            Some(v.to_vec())
-        } else {
-            None
-        }
     }
 }
