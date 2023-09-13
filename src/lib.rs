@@ -12,6 +12,7 @@ pub enum BeeValue {
     Dictionary(std::collections::HashMap<String, Bee>),
 }
 
+
 #[derive(Debug, Clone)]
 pub struct Bee {
     bee_value: BeeValue,
@@ -89,7 +90,7 @@ impl Bee {
             None
         }
     }
-    
+
     pub fn get_decoded(&self) -> Vec<u8> {
         self.raw.to_vec()
     }
