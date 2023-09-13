@@ -94,6 +94,22 @@ impl Bee {
     pub fn get_decoded(&self) -> Vec<u8> {
         self.raw.to_vec()
     }
+    
+    pub fn get_list(&self) -> Option<Vec<Bee>> {
+        if let Bee { bee_value: BeeValue::List(v), raw: _ } = self {
+            Some(v.to_vec())
+        } else {
+            None
+        }
+    }
+
+    pub fn get_dict(&self) -> Option<HashMap<String, Bee>> {
+        if let Bee { bee_value: BeeValue::Dictionary(d), raw: _ } = self {
+            Some(d.to_owned())
+        } else {
+            None
+        }
+    }
 }
 
 impl BeeValue {
