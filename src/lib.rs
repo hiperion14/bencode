@@ -7,7 +7,7 @@ pub enum BeeValue {
     Null,
     String(String),
     Raw(Vec<u8>),
-    Integer(i32),
+    Integer(i128),
     List(Vec<Bee>),
     Dictionary(std::collections::HashMap<String, Bee>),
 }
@@ -75,7 +75,7 @@ impl Bee {
         }
     }
 
-    pub fn get_int(&self) -> Option<i32> {
+    pub fn get_int(&self) -> Option<i128> {
         if let Bee { bee_value: BeeValue::Integer(i), raw: _ } = self {
             Some(i.to_owned())
         } else {
@@ -138,7 +138,7 @@ impl BeeValue {
         //Integer
         if bytes[index] == 0x69 {
             let position = bytes.iter().skip(index).position(|&r| r == 0x65).unwrap() + index;
-            let number = String::from_utf8(bytes[index+1..position].to_vec()).unwrap().parse::<i32>().unwrap();
+            let number = String::from_utf8(bytes[index+1..position].to_vec()).unwrap().parse::<i128>().unwrap();
             return (Bee {
                 bee_value: BeeValue::Integer(number),
                 raw: bytes[index..position+1].to_vec()
